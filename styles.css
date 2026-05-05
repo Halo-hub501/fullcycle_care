@@ -495,13 +495,12 @@ a:hover { text-decoration: underline; }
 .result-note { font-size: 0.85rem; margin-bottom: 20px; }
 
 /* ===== ABOUT ===== */
-.about-inner {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 48px;
-  align-items: center;
+.about-text {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
 }
-.about-photo .hero-placeholder { aspect-ratio: 1 / 1; }
+.about-text p { text-align: left; }
 .about-sign { font-style: italic; color: var(--ink); margin-top: 16px; }
 
 /* ===== FAQ ===== */
@@ -606,7 +605,6 @@ a:hover { text-decoration: underline; }
 @media (max-width: 860px) {
   .hero-inner,
   .calculator,
-  .about-inner,
   .footer-inner,
   .form-row {
     grid-template-columns: 1fr;
