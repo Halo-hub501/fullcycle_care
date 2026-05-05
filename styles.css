@@ -591,6 +591,30 @@ a:hover { text-decoration: underline; }
   font-size: 0.9rem;
 }
 
+/* Social media icons */
+.social-links {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+}
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d6e7dc;
+  margin: 0;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.social-links a:hover {
+  background: var(--gold);
+  color: var(--green-900);
+  transform: translateY(-2px);
+}
+
 /* ===== RESPONSIVE ===== */
 
 /* Tablet & small laptop */
