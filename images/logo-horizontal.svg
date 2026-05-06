@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200">
+  <title>FullCycleCare horizontal lockup</title>
+  <!-- Mark on the left -->
+  <g transform="translate(20,20)">
+    <circle cx="80" cy="80" r="76" fill="#2d7a4f"/>
+    <circle cx="80" cy="80" r="67" fill="none" stroke="#e6b54a" stroke-width="1.5" stroke-dasharray="2 6" opacity="0.55"/>
+    <text x="80" y="105" font-family="Georgia, 'Times New Roman', serif" font-size="80" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="-3">FC</text>
+    <circle cx="127" cy="38" r="6" fill="#e6b54a"/>
+  </g>
+  <!-- Wordmark on the right -->
+  <g transform="translate(200,0)">
+    <text x="0" y="115" font-family="Georgia, 'Times New Roman', serif" font-size="74" font-weight="700" fill="#1f4d33" letter-spacing="-1">FullCycleCare<tspan fill="#e6b54a">.</tspan></text>
+    <text x="3" y="150" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="600" fill="#4a5853" letter-spacing="4">PROPERTY CARE SPECIALIST</text>
+  </g>
+</svg>
