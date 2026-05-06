@@ -503,6 +503,52 @@ a:hover { text-decoration: underline; }
 .about-text p { text-align: left; }
 .about-sign { font-style: italic; color: var(--ink); margin-top: 16px; }
 
+/* ===== TESTIMONIALS ===== */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.testimonial-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+.stars {
+  color: var(--gold);
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+.testimonial-quote {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--ink);
+  flex-grow: 1;
+  margin-bottom: 18px;
+}
+.testimonial-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.testimonial-name {
+  font-weight: 700;
+  color: var(--green-900);
+}
+.testimonial-source {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
 /* ===== FAQ ===== */
 .faq-list { max-width: 800px; margin: 0 auto; }
 .faq-list details {
