@@ -197,26 +197,46 @@
             </select>
           </label>
 
-          <fieldset>
+          <fieldset class="calc-services">
             <legend>Services</legend>
-            <label class="checkbox"><input type="checkbox" id="svc-lawn" checked /> Lawn mowing</label>
-            <label class="checkbox"><input type="checkbox" id="svc-leaves" /> Leaf cleanup</label>
-            <label class="checkbox"><input type="checkbox" id="svc-snow" /> Snow removal</label>
-          </fieldset>
 
-          <label>
-            Frequency
-            <select id="calc-freq">
-              <option value="weekly" selected>Weekly (recurring)</option>
-              <option value="biweekly">Bi-weekly (recurring)</option>
-              <option value="onetime">One-time visit</option>
-            </select>
-          </label>
+            <div class="svc-row">
+              <label class="checkbox"><input type="checkbox" id="svc-lawn" checked /> Lawn mowing</label>
+              <select id="mode-lawn" aria-label="Lawn mowing schedule">
+                <option value="weekly" selected>Weekly (recurring)</option>
+                <option value="biweekly">Bi-weekly (recurring)</option>
+                <option value="onetime">One-time visit</option>
+              </select>
+            </div>
+
+            <div class="svc-row">
+              <label class="checkbox"><input type="checkbox" id="svc-leaves" /> Leaf cleanup</label>
+              <select id="mode-leaves" aria-label="Leaf cleanup plan" disabled>
+                <option value="one" selected>1 full cleanup (late fall)</option>
+                <option value="two">2 cleanups (early + late fall)</option>
+              </select>
+            </div>
+
+            <div class="svc-row">
+              <label class="checkbox"><input type="checkbox" id="svc-snow" /> Snow removal</label>
+              <select id="mode-snow" aria-label="Snow removal plan" disabled>
+                <option value="seasonal" selected>Seasonal flat-rate (Nov–Apr, unlimited)</option>
+                <option value="pervisit">Per-visit (only pay when we plow)</option>
+              </select>
+              <select id="size-snow" class="svc-sub" aria-label="Driveway size" disabled>
+                <option value="single">Single-car driveway</option>
+                <option value="double" selected>Double-car driveway</option>
+                <option value="triple">Triple-car or long driveway</option>
+                <option value="extra">Extra-wide (4+ cars across)</option>
+              </select>
+            </div>
+          </fieldset>
         </div>
 
         <div class="calc-result">
-          <p class="result-label" id="calc-label">Estimated monthly cost</p>
-          <p class="result-price"><span id="calc-price">$160</span><span class="result-per" id="calc-per">/mo</span></p>
+          <p class="result-label">Your estimate</p>
+          <ul id="calc-breakdown" class="result-breakdown"></ul>
+          <p class="result-empty" id="calc-empty" hidden>Pick at least one service to see your estimate.</p>
           <p class="result-note">Estimate only. Real price confirmed at your free on-site visit.</p>
           <a href="#book" class="btn btn-primary btn-lg">Book My Free On-Site Visit</a>
         </div>
@@ -298,12 +318,33 @@
           <label>Property address<input type="text" name="address" required /></label>
         </div>
         <label>What do you need help with?
-          <select name="service">
+          <select name="service" id="form-service" required>
             <option value="">Select a service…</option>
             <option>Lawn mowing</option>
             <option>Leaf cleanup</option>
             <option>Snow removal</option>
-            <option>Bundle / multiple services</option>
+          </select>
+        </label>
+        <label id="form-plan-row" hidden>Plan
+          <select name="plan" id="form-plan">
+            <option value="">Select plan…</option>
+          </select>
+        </label>
+        <label id="form-yard-row" hidden>Yard size <em>(for lawn / leaf service)</em>
+          <select name="yard" id="form-yard">
+            <option value="">Select yard size…</option>
+            <option value="small">Small (under 2,000 sq ft)</option>
+            <option value="medium">Medium (2,000–5,000 sq ft)</option>
+            <option value="large">Large (5,000+ sq ft)</option>
+          </select>
+        </label>
+        <label id="form-driveway-row" hidden>Driveway size <em>(for snow service)</em>
+          <select name="driveway" id="form-driveway">
+            <option value="">Select driveway size…</option>
+            <option value="single">Single-car driveway</option>
+            <option value="double">Double-car driveway</option>
+            <option value="triple">Triple-car or long driveway</option>
+            <option value="extra">Extra-wide (4+ cars across)</option>
           </select>
         </label>
         <label>Anything else we should know? <em>(optional)</em>

@@ -4,58 +4,182 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ===== 1. CALCULATOR =====
-  // Monthly base prices for recurring service (GTA rates, 2026).
-  // Small lawn weekly = $180 × 0.8 × 1.0 = $144/mo (~$36/visit). Bi-weekly = $86/mo (~$43/visit).
-  const RECURRING_BASE = { lawn: 180, leaves: 40, snow: 80 };
-  // One-time visit base prices (single-visit, no commitment — priced as a one-off premium).
-  // Small lawn one-time = $60 × 0.8 = $48 → ~$50. Leaf cleanup is a full-property job in fall/spring.
-  const ONETIME_BASE   = { lawn: 60, leaves: 200, snow: 50 };
-  const SIZE_MULT      = { small: 0.8, medium: 1.0, large: 1.4 };
-  const FREQ_MULT      = { weekly: 1.0, biweekly: 0.6, onetime: 1.0 };
+  // GTA 2026 base prices for a medium yard. Small × 0.8, large × 1.4. Rounded to nearest $5.
+  // Each service uses its own pricing model — lawn is recurring monthly, leaves is per-cleanup,
+  // snow is either seasonal flat-rate or per-visit. We render a breakdown, not a single total,
+  // because the units differ ($/mo vs $/season vs flat job).
+  const SIZE_MULT     = { small: 0.8, medium: 1.0, large: 1.4 };
+  const DRIVEWAY_MULT = { single: 0.8, double: 1.0, triple: 1.35, extra: 1.6 };
+  const DRIVEWAY_LABEL = {
+    single: 'single-car driveway',
+    double: 'double-car driveway',
+    triple: 'triple-car or long driveway',
+    extra:  'extra-wide driveway (4+ cars across)'
+  };
 
-  const sizeEl   = document.getElementById('calc-size');
-  const freqEl   = document.getElementById('calc-freq');
-  const priceEl  = document.getElementById('calc-price');
-  const labelEl  = document.getElementById('calc-label');
-  const perEl    = document.getElementById('calc-per');
-  const svcLawn  = document.getElementById('svc-lawn');
-  const svcLeaf  = document.getElementById('svc-leaves');
-  const svcSnow  = document.getElementById('svc-snow');
-
-  function updatePrice() {
-    const isOneTime = freqEl.value === 'onetime';
-    const bases = isOneTime ? ONETIME_BASE : RECURRING_BASE;
-
-    let total = 0;
-    if (svcLawn.checked) total += bases.lawn;
-    if (svcLeaf.checked) total += bases.leaves;
-    if (svcSnow.checked) total += bases.snow;
-
-    total *= SIZE_MULT[sizeEl.value] || 1;
-    total *= FREQ_MULT[freqEl.value] || 1;
-
-    // round to nearest $5
-    const rounded = total === 0 ? 0 : Math.round(total / 5) * 5;
-    priceEl.textContent = '$' + rounded;
-
-    // swap label + unit so the display matches the pricing model
-    if (isOneTime) {
-      labelEl.textContent = 'Estimated one-time cost';
-      perEl.textContent = '';
-    } else {
-      labelEl.textContent = 'Estimated monthly cost';
-      perEl.textContent = '/mo';
+  const PRICING = {
+    lawn: {
+      weekly:   { base: 180, unit: '/mo',     desc: 'weekly mowing through the season' },
+      biweekly: { base: 110, unit: '/mo',     desc: 'bi-weekly mowing through the season' },
+      onetime:  { base: 60,  unit: '',        desc: 'one-time mow' }
+    },
+    leaves: {
+      one: { base: 225, unit: '', desc: '1 full property cleanup, late fall' },
+      two: { base: 390, unit: '', desc: '2 cleanups (early + late fall)' }
+    },
+    snow: {
+      seasonal: { base: 600, unit: ' / season', desc: 'unlimited visits, Nov–Apr' },
+      pervisit: { base: 55,  unit: ' / visit',  desc: 'pay only when we plow' }
     }
+  };
+
+  const SERVICES = [
+    { key: 'lawn',   name: 'Lawn mowing'  },
+    { key: 'leaves', name: 'Leaf cleanup' },
+    { key: 'snow',   name: 'Snow removal' }
+  ];
+
+  const sizeEl      = document.getElementById('calc-size');
+  const breakdownEl = document.getElementById('calc-breakdown');
+  const emptyEl     = document.getElementById('calc-empty');
+
+  const round5 = n => Math.round(n / 5) * 5;
+
+  function getServiceState(key) {
+    const checkEl = document.getElementById('svc-' + key);
+    const modeEl  = document.getElementById('mode-' + key);
+    return { checkEl, modeEl };
   }
 
-  [sizeEl, freqEl, svcLawn, svcLeaf, svcSnow].forEach(el => {
-    el.addEventListener('change', updatePrice);
+  const drivewayEl = document.getElementById('size-snow');
+
+  function updatePrice() {
+    const yardMult = SIZE_MULT[sizeEl.value] || 1;
+    const drivewayMult = DRIVEWAY_MULT[drivewayEl.value] || 1;
+    breakdownEl.innerHTML = '';
+    let anyChecked = false;
+
+    SERVICES.forEach(svc => {
+      const { checkEl, modeEl } = getServiceState(svc.key);
+      const isSnow = svc.key === 'snow';
+      modeEl.disabled = !checkEl.checked;
+      if (isSnow) drivewayEl.disabled = !checkEl.checked;
+      if (!checkEl.checked) return;
+
+      anyChecked = true;
+      const cfg = PRICING[svc.key][modeEl.value];
+      const mult = isSnow ? drivewayMult : yardMult;
+      const price = round5(cfg.base * mult);
+      const desc = isSnow ? cfg.desc + ' · ' + DRIVEWAY_LABEL[drivewayEl.value] : cfg.desc;
+
+      const li = document.createElement('li');
+      li.className = 'breakdown-row';
+      li.innerHTML =
+        '<div class="b-text">' +
+          '<span class="b-service">' + svc.name + '</span>' +
+          '<span class="b-desc">' + desc + '</span>' +
+        '</div>' +
+        '<span class="b-price">$' + price + '<span class="b-unit">' + cfg.unit + '</span></span>';
+      breakdownEl.appendChild(li);
+    });
+
+    emptyEl.hidden = anyChecked;
+  }
+
+  // Track whether the customer actually interacted with the calculator. If they didn't,
+  // we skip the calculator fields in the email so defaults don't masquerade as customer input.
+  let calculatorTouched = false;
+  const markTouched = () => { calculatorTouched = true; };
+
+  sizeEl.addEventListener('change', updatePrice);
+  drivewayEl.addEventListener('change', updatePrice);
+  sizeEl.addEventListener('change', markTouched);
+  drivewayEl.addEventListener('change', markTouched);
+  SERVICES.forEach(svc => {
+    const { checkEl, modeEl } = getServiceState(svc.key);
+    checkEl.addEventListener('change', updatePrice);
+    modeEl.addEventListener('change', updatePrice);
+    checkEl.addEventListener('change', markTouched);
+    modeEl.addEventListener('change', markTouched);
   });
   updatePrice();
 
   // ===== 2. BOOKING FORM =====
   const form = document.getElementById('booking-form');
   const submitBtn = form.querySelector('button[type="submit"]');
+
+  // Show the matching follow-up dropdowns based on which service the customer picked.
+  // Each service gets a Plan dropdown plus a Size dropdown (yard for lawn/leaf, driveway for snow).
+  const formServiceEl   = document.getElementById('form-service');
+  const formPlanRow     = document.getElementById('form-plan-row');
+  const formPlanEl      = document.getElementById('form-plan');
+  const formDrivewayRow = document.getElementById('form-driveway-row');
+  const formDrivewayEl  = document.getElementById('form-driveway');
+  const formYardRow     = document.getElementById('form-yard-row');
+  const formYardEl      = document.getElementById('form-yard');
+  const SNOW_SERVICES = new Set(['Snow removal']);
+  const YARD_SERVICES = new Set(['Lawn mowing', 'Leaf cleanup']);
+
+  const PLAN_OPTIONS = {
+    'Lawn mowing': [
+      { value: 'weekly',   label: 'Weekly (recurring)' },
+      { value: 'biweekly', label: 'Bi-weekly (recurring)' },
+      { value: 'onetime',  label: 'One-time visit' }
+    ],
+    'Leaf cleanup': [
+      { value: 'one', label: '1 full cleanup (late fall)' },
+      { value: 'two', label: '2 cleanups (early + late fall)' }
+    ],
+    'Snow removal': [
+      { value: 'seasonal', label: 'Seasonal flat-rate (Nov–Apr, unlimited)' },
+      { value: 'pervisit', label: 'Per-visit (only pay when we plow)' }
+    ]
+  };
+
+  function toggleFollowup(rowEl, selectEl, show) {
+    rowEl.hidden = !show;
+    if (show) {
+      selectEl.setAttribute('required', '');
+    } else {
+      selectEl.removeAttribute('required');
+      selectEl.value = '';
+    }
+  }
+  function syncFormFollowups() {
+    const svc = formServiceEl.value;
+    const opts = PLAN_OPTIONS[svc];
+    if (opts) {
+      formPlanEl.innerHTML = '<option value="">Select plan…</option>' +
+        opts.map(o => '<option value="' + o.value + '">' + o.label + '</option>').join('');
+    }
+    toggleFollowup(formPlanRow,     formPlanEl,     !!opts);
+    toggleFollowup(formDrivewayRow, formDrivewayEl, SNOW_SERVICES.has(svc));
+    toggleFollowup(formYardRow,     formYardEl,     YARD_SERVICES.has(svc));
+  }
+  formServiceEl.addEventListener('change', syncFormFollowups);
+  syncFormFollowups();
+
+  // When the customer clicks "Book My Free On-Site Visit" inside the calculator,
+  // pre-fill the booking form's service + size so they don't have to repeat themselves.
+  // Only auto-fills when exactly one service is checked in the calculator.
+  const bookFromCalcBtn = document.querySelector('.calc-result a[href="#book"]');
+  const SERVICE_LABEL = { lawn: 'Lawn mowing', leaves: 'Leaf cleanup', snow: 'Snow removal' };
+  if (bookFromCalcBtn) {
+    bookFromCalcBtn.addEventListener('click', () => {
+      const checked = SERVICES.filter(svc => document.getElementById('svc-' + svc.key).checked);
+      if (checked.length !== 1) return;
+      const svc = checked[0];
+      formServiceEl.value = SERVICE_LABEL[svc.key];
+      syncFormFollowups();
+      const calcMode = document.getElementById('mode-' + svc.key).value;
+      if (calcMode) formPlanEl.value = calcMode;
+      if (svc.key === 'snow' && drivewayEl.value) {
+        formDrivewayEl.value = drivewayEl.value;
+      } else if ((svc.key === 'lawn' || svc.key === 'leaves') && sizeEl.value) {
+        formYardEl.value = sizeEl.value;
+      }
+    });
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -81,22 +205,79 @@ document.addEventListener('DOMContentLoaded', () => {
       medium: 'Medium (2,000–5,000 sq ft)',
       large: 'Large (5,000+ sq ft)'
     };
-    const freqLabels = {
-      weekly: 'Weekly (recurring)',
-      biweekly: 'Bi-weekly (recurring)',
-      onetime: 'One-time visit'
+    const drivewayDisplay = {
+      single: 'Single-car driveway',
+      double: 'Double-car driveway',
+      triple: 'Triple-car or long driveway',
+      extra:  'Extra-wide (4+ cars across)'
     };
-    const calcServices = [
-      svcLawn.checked && 'Lawn mowing',
-      svcLeaf.checked && 'Leaf cleanup',
-      svcSnow.checked && 'Snow removal'
-    ].filter(Boolean).join(', ') || 'None selected';
 
-    const formData = new FormData(form);
-    formData.append('Yard size (calculator)', sizeLabels[sizeEl.value] || sizeEl.value);
-    formData.append('Services (calculator)', calcServices);
-    formData.append('Frequency (calculator)', freqLabels[freqEl.value] || freqEl.value);
-    formData.append('Estimated price shown', priceEl.textContent + (perEl.textContent || ''));
+    // Build a clean payload from scratch — only include filled, non-redundant fields,
+    // with human-readable labels for the email. We skip blank fields entirely.
+    // Note: do NOT append the botcheck honeypot — its presence signals "bot" to Web3Forms.
+    const formData = new FormData();
+    ['access_key', 'subject', 'from_name'].forEach(n => {
+      const el = form.querySelector('[name=' + n + ']');
+      if (el) formData.append(n, el.value);
+    });
+
+    formData.append('Customer name',     form.elements['name'].value.trim());
+    formData.append('Email',             form.elements['email'].value.trim());
+    formData.append('Phone',             form.elements['phone'].value.trim());
+    formData.append('Property address',  form.elements['address'].value.trim());
+
+    const service = formServiceEl.value;
+    formData.append('Service requested', service);
+
+    // Show only the price the customer actually picked (one specific plan + size).
+    const planKey = formPlanEl.value;
+    const planLabel = (PLAN_OPTIONS[service] || []).find(o => o.value === planKey);
+
+    if (YARD_SERVICES.has(service) && formYardEl.value && planKey) {
+      const k = formYardEl.value;
+      const m = SIZE_MULT[k];
+      formData.append('Yard size', sizeLabels[k]);
+      if (planLabel) formData.append('Plan', planLabel.label);
+      const cfg = PRICING[service === 'Lawn mowing' ? 'lawn' : 'leaves'][planKey];
+      if (cfg) {
+        const price = round5(cfg.base * m);
+        formData.append('Estimated price', '$' + price + (cfg.unit || ''));
+      }
+    }
+    if (SNOW_SERVICES.has(service) && formDrivewayEl.value && planKey) {
+      const k = formDrivewayEl.value;
+      const m = DRIVEWAY_MULT[k];
+      formData.append('Driveway size', drivewayDisplay[k]);
+      if (planLabel) formData.append('Plan', planLabel.label);
+      const cfg = PRICING.snow[planKey];
+      if (cfg) {
+        const price = round5(cfg.base * m);
+        formData.append('Estimated price', '$' + price + cfg.unit);
+      }
+    }
+
+    const note = form.elements['message'].value.trim();
+    if (note) formData.append('Notes from customer', note);
+
+    // Calculator data — only attach if customer engaged with it AND configured services.
+    // Labelled clearly so it's not confused with the form-side info above.
+    if (calculatorTouched) {
+      const yardMult = SIZE_MULT[sizeEl.value] || 1;
+      const drivewayMult = DRIVEWAY_MULT[drivewayEl.value] || 1;
+      const lines = [];
+      SERVICES.forEach(svc => {
+        const { checkEl, modeEl } = getServiceState(svc.key);
+        if (!checkEl.checked) return;
+        const isSnow = svc.key === 'snow';
+        const cfg = PRICING[svc.key][modeEl.value];
+        const price = round5(cfg.base * (isSnow ? drivewayMult : yardMult));
+        const desc = isSnow ? cfg.desc + ' · ' + DRIVEWAY_LABEL[drivewayEl.value] : cfg.desc;
+        lines.push(svc.name + ' $' + price + cfg.unit + ' (' + desc + ')');
+      });
+      if (lines.length) {
+        formData.append('Customer also configured in calculator', lines.join('  ·  '));
+      }
+    }
 
     try {
       const response = await fetch(form.action, {
