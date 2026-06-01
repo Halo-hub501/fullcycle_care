@@ -121,11 +121,16 @@ a:hover { text-decoration: underline; }
   gap: 24px;
 }
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--green-900);
 }
-.logo span { color: var(--gold); }
+.logo-mark { width: 36px; height: 36px; flex-shrink: 0; }
+.logo-text { line-height: 1; }
+.logo-dot { color: var(--gold); }
 .logo:hover { text-decoration: none; }
 .main-nav { display: flex; gap: 24px; flex: 1; justify-content: center; }
 .main-nav a { color: var(--ink); font-weight: 500; }
@@ -382,6 +387,12 @@ a:hover { text-decoration: underline; }
 .work-img-1 { background-image: url('images/work-1.jpg'); }
 .work-img-2 { background-image: url('images/work-2.jpg'); }
 .work-img-3 { background-image: url('images/work-3.jpg'); }
+.work-img-5 { background-image: url('images/work-5.jpg'); }
+.work-img-6 { background-image: url('images/work-6.jpg'); }
+.work-img-7 { background-image: url('images/work-7.jpg'); }
+.work-img-8 { background-image: url('images/work-8.jpg'); }
+.work-img-9 { background-image: url('images/work-9.jpg'); }
+.work-img-10 { background-image: url('images/work-10.jpg'); }
 .work-card:hover .work-img { transform: scale(1.04); }
 
 @media (max-width: 860px) {
