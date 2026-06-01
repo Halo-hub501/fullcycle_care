@@ -2,10 +2,6 @@
   <title>FullCycleCare emblem</title>
   <!-- Outer green disc -->
   <circle cx="200" cy="200" r="190" fill="#2d7a4f"/>
-  <!-- Subtle inner gold ring suggesting the full cycle / year-round commitment -->
-  <circle cx="200" cy="200" r="168" fill="none" stroke="#e6b54a" stroke-width="2.5" stroke-dasharray="3 9" opacity="0.55"/>
   <!-- FC monogram -->
   <text x="200" y="262" font-family="Georgia, 'Times New Roman', serif" font-size="200" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="-6">FC</text>
-  <!-- Gold accent dot — echoes the dot in the FullCycleCare. wordmark -->
-  <circle cx="318" cy="92" r="16" fill="#e6b54a"/>
 </svg>
