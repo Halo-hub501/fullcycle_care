@@ -212,23 +212,18 @@ document.addEventListener('DOMContentLoaded', () => {
       extra:  'Extra-wide (4+ cars across)'
     };
 
-    // Build a clean payload from scratch — only include filled, non-redundant fields,
-    // with human-readable labels for the email. We skip blank fields entirely.
-    // Note: do NOT append the _honey honeypot — leaving it empty/absent tells FormSubmit "not a bot".
-    const formData = new FormData();
-    ['_subject', '_template', '_captcha', '_autoresponse'].forEach(n => {
-      const el = form.querySelector('[name="' + n + '"]');
-      if (el) formData.append(n, el.value);
-    });
-
-    // FormSubmit reads the lowercase "email" field for the reply-to AND the client auto-reply target.
-    formData.append('Customer name',     form.elements['name'].value.trim());
-    formData.append('email',             form.elements['email'].value.trim());
-    formData.append('Phone',             form.elements['phone'].value.trim());
-    formData.append('Property address',  form.elements['address'].value.trim());
+    // Build a clean JSON payload for our serverless function — only filled fields.
+    // _honey is a hidden honeypot: real users leave it empty, bots fill it.
+    const payload = {
+      _honey:  (form.querySelector('[name="_honey"]') || {}).value || '',
+      name:    form.elements['name'].value.trim(),
+      email:   form.elements['email'].value.trim(),
+      phone:   form.elements['phone'].value.trim(),
+      address: form.elements['address'].value.trim()
+    };
 
     const service = formServiceEl.value;
-    formData.append('Service requested', service);
+    payload.service = service;
 
     // Show only the price the customer actually picked (one specific plan + size).
     const planKey = formPlanEl.value;
@@ -236,32 +231,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (YARD_SERVICES.has(service) && formYardEl.value && planKey) {
       const k = formYardEl.value;
-      const m = SIZE_MULT[k];
-      formData.append('Yard size', sizeLabels[k]);
-      if (planLabel) formData.append('Plan', planLabel.label);
+      payload.yard = sizeLabels[k];
+      if (planLabel) payload.plan = planLabel.label;
       const cfg = PRICING[service === 'Lawn mowing' ? 'lawn' : 'leaves'][planKey];
-      if (cfg) {
-        const price = round5(cfg.base * m);
-        formData.append('Estimated price', '$' + price + (cfg.unit || ''));
-      }
+      if (cfg) payload.price = '$' + round5(cfg.base * SIZE_MULT[k]) + (cfg.unit || '');
     }
     if (SNOW_SERVICES.has(service) && formDrivewayEl.value && planKey) {
       const k = formDrivewayEl.value;
-      const m = DRIVEWAY_MULT[k];
-      formData.append('Driveway size', drivewayDisplay[k]);
-      if (planLabel) formData.append('Plan', planLabel.label);
+      payload.driveway = drivewayDisplay[k];
+      if (planLabel) payload.plan = planLabel.label;
       const cfg = PRICING.snow[planKey];
-      if (cfg) {
-        const price = round5(cfg.base * m);
-        formData.append('Estimated price', '$' + price + cfg.unit);
-      }
+      if (cfg) payload.price = '$' + round5(cfg.base * DRIVEWAY_MULT[k]) + cfg.unit;
     }
 
     const note = form.elements['message'].value.trim();
-    if (note) formData.append('Notes from customer', note);
+    if (note) payload.notes = note;
 
-    // Calculator data — only attach if customer engaged with it AND configured services.
-    // Labelled clearly so it's not confused with the form-side info above.
+    // Calculator data — only attach if the customer engaged with it AND configured services.
     if (calculatorTouched) {
       const yardMult = SIZE_MULT[sizeEl.value] || 1;
       const drivewayMult = DRIVEWAY_MULT[drivewayEl.value] || 1;
@@ -275,16 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const desc = isSnow ? cfg.desc + ' · ' + DRIVEWAY_LABEL[drivewayEl.value] : cfg.desc;
         lines.push(svc.name + ' $' + price + cfg.unit + ' (' + desc + ')');
       });
-      if (lines.length) {
-        formData.append('Customer also configured in calculator', lines.join('  ·  '));
-      }
+      if (lines.length) payload.calculator = lines.join('  ·  ');
     }
 
     try {
-      const response = await fetch(form.action, {
+      const response = await fetch('/api/quote', {
         method: 'POST',
-        body: formData,
-        headers: { 'Accept': 'application/json' }
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
       });
       const data = await response.json();
 

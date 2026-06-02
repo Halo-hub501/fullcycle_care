@@ -81,6 +81,7 @@ module.exports = async (req, res) => {
     ['Property address', body.address],
     ['Service requested', body.service],
     ['Yard size', body.yard],
+    ['Driveway size', body.driveway],
     ['Plan', body.plan],
     ['Estimated price', body.price],
     ['Notes from customer', body.notes],
@@ -119,13 +120,6 @@ module.exports = async (req, res) => {
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Quote email failed:', err && err.message);
-    // Diagnostic detail is only exposed when ?debug=1 is passed (used during setup, never by real users).
-    const debug = req.query && (req.query.debug === '1');
-    res.status(500).json({
-      success: false,
-      error: 'Could not send email. Please call 437-318-2562.',
-      detail: debug ? String((err && err.message) || err) : undefined,
-      host: debug ? (process.env.ZOHO_SMTP_HOST || 'smtp.zoho.com') : undefined
-    });
+    res.status(500).json({ success: false, error: 'Could not send email. Please call 437-318-2562.' });
   }
 };
