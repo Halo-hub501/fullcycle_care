@@ -26,7 +26,7 @@ function clientConfirmationHtml(name) {
     </div>
     <div style="border:1px solid #e3ebe5;border-top:none;border-radius:0 0 12px 12px;padding:28px">
       <p style="font-size:1.05rem;margin:0 0 14px">Hi ${escapeHtml(firstName)},</p>
-      <p style="margin:0 0 14px">Thank you for choosing <strong>Full Cycle Property Care</strong>! We've received your request and confirmed it. A member of our team will reach out <strong>within two hours</strong> to set up your visit.</p>
+      <p style="margin:0 0 14px">Thank you for choosing <strong>Full Cycle Property Care</strong>! We have received your request and it has been confirmed. A member of our team will reach out <strong>within two hours</strong> to set up a visit.</p>
       <p style="margin:0 0 20px">If you have any questions, don't hesitate to reply to this email or call us at <a href="tel:4373182562" style="color:#2d7a4f">437-318-2562</a>.</p>
       <p style="margin:0;color:#4a5853">Warm regards,<br><strong>The Full Cycle Property Care Team</strong><br>
         <a href="https://fullcyclecare.ca" style="color:#2d7a4f">fullcyclecare.ca</a> &middot;
