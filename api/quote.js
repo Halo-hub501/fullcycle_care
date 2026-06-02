@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
   }
 
   const transporter = nodemailer.createTransport({
-    host: process.env.ZOHO_SMTP_HOST || 'smtp.zoho.com',
+    host: process.env.ZOHO_SMTP_HOST || 'smtp.zohocloud.ca',
     port: 465,
     secure: true,
     auth: { user: owner, pass: process.env.ZOHO_PASS }
