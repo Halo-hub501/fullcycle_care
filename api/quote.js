@@ -28,7 +28,7 @@ function clientConfirmationHtml(name) {
       <p style="font-size:1.05rem;margin:0 0 14px">Hi ${escapeHtml(firstName)}, thank you for choosing Full Cycle Care!</p>
       <p style="margin:0 0 14px">We've received your quote request and a member of our team is already reviewing the details.</p>
       <p style="margin:0 0 6px"><strong>What happens next:</strong></p>
-      <p style="margin:0 0 14px">We'll personally reach out <strong>within 24 hours</strong> to confirm your free, no-obligation on-site visit and answer any questions you may have.</p>
+      <p style="margin:0 0 14px">We'll personally reach out <strong>within an hour</strong> to confirm your free, no-obligation on-site visit and answer any questions you may have.</p>
       <p style="margin:0 0 14px">Need us sooner? Just reply to this email or call <a href="tel:4373182562" style="color:#2d7a4f">437-318-2562</a> &mdash; we're always happy to help.</p>
       <p style="margin:0 0 20px">We look forward to taking great care of your property, every season of the year.</p>
       <p style="margin:0;color:#4a5853">Warm regards,<br><strong>The Full Cycle Care Team</strong><br>

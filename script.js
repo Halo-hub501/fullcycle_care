@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmation.className = 'form-confirmation';
         confirmation.innerHTML = `
           <h3>Thanks — we got it.</h3>
-          <p>We'll be in touch within 24 hours to schedule your free on-site visit.</p>
+          <p>We'll be in touch within an hour to schedule your free on-site visit.</p>
           <p>Need us sooner? Call <a href="tel:4373182562">437-318-2562</a>.</p>
         `;
         form.replaceWith(confirmation);
