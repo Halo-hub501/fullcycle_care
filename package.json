@@ -1,0 +1,9 @@
+{
+  "name": "fullcyclecare-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FullCycle Property Care website + quote-confirmation serverless function",
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}
