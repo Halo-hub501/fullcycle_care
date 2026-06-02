@@ -96,7 +96,7 @@ module.exports = async (req, res) => {
 
   try {
     // 1) Business notification — reply-to is the client so you can answer directly.
-    const bizInfo = await transporter.sendMail({
+    await transporter.sendMail({
       from: `"FullCycle Website" <${owner}>`,
       to: owner,
       replyTo: email,
@@ -108,7 +108,7 @@ module.exports = async (req, res) => {
     });
 
     // 2) Instant branded confirmation to the client.
-    const clientInfo = await transporter.sendMail({
+    await transporter.sendMail({
       from: `"Full Cycle Care" <${owner}>`,
       to: email,
       replyTo: owner,
@@ -116,14 +116,7 @@ module.exports = async (req, res) => {
       html: clientConfirmationHtml(name)
     });
 
-    const debug = req.query && (req.query.debug === '1');
-    res.status(200).json({
-      success: true,
-      debug: debug ? {
-        business: { accepted: bizInfo.accepted, rejected: bizInfo.rejected, response: bizInfo.response },
-        client: { accepted: clientInfo.accepted, rejected: clientInfo.rejected, response: clientInfo.response }
-      } : undefined
-    });
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error('Quote email failed:', err && err.message);
     res.status(500).json({ success: false, error: 'Could not send email. Please call 437-318-2562.' });
