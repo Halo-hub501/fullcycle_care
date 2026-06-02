@@ -361,13 +361,27 @@ a:hover { text-decoration: underline; }
 .service-icon { font-size: 2.5rem; margin-bottom: 12px; }
 
 /* ===== OUR WORK GALLERY ===== */
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  max-width: 1100px;
-  margin: 0 auto;
+.work-carousel { position: relative; max-width: 1100px; margin: 0 auto; }
+.work-viewport { overflow: hidden; }
+.work-track { display: flex; gap: 16px; transition: transform 0.45s ease; will-change: transform; }
+.work-track .work-card { flex: 0 0 calc((100% - 32px) / 3); }
+.work-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
+  background: #2d7a4f; color: #fff; font-size: 1.7rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22); z-index: 2;
+  transition: background 0.2s ease;
 }
+.work-nav:hover { background: #25623f; }
+.work-prev { left: -8px; }
+.work-next { right: -8px; }
+.work-dots { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }
+.work-dot {
+  width: 10px; height: 10px; padding: 0; border: none; border-radius: 50%;
+  background: #cdd9d0; cursor: pointer; transition: background 0.2s ease, transform 0.2s ease;
+}
+.work-dot.is-active { background: #2d7a4f; transform: scale(1.25); }
 .work-card {
   margin: 0;
   border-radius: var(--radius);
@@ -396,7 +410,9 @@ a:hover { text-decoration: underline; }
 .work-card:hover .work-img { transform: scale(1.04); }
 
 @media (max-width: 860px) {
-  .work-grid { grid-template-columns: 1fr; }
+  .work-track .work-card { flex: 0 0 100%; }
+  .work-prev { left: 2px; }
+  .work-next { right: 2px; }
 }
 
 /* ===== HOW IT WORKS ===== */
