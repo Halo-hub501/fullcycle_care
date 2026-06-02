@@ -336,56 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ===== 5. WORK CAROUSEL =====
-  // "Our work" shows 3 photos per slide on desktop, 1 on mobile.
-  // Arrows + dots move a whole page at a time; layout recalculates on resize.
-  const wcTrack = document.getElementById('work-track');
-  if (wcTrack) {
-    const wcViewport = wcTrack.parentElement;
-    const wcPrev = document.getElementById('work-prev');
-    const wcNext = document.getElementById('work-next');
-    const wcDots = document.getElementById('work-dots');
-    const cardCount = wcTrack.children.length;
-    const GAP = 16;
-    let index = 0;
-    let pages = 1;
-
-    const perView = () => (window.innerWidth <= 860 ? 1 : 3);
-
-    function render() {
-      const shift = index * (wcViewport.clientWidth + GAP);
-      wcTrack.style.transform = 'translateX(' + (-shift) + 'px)';
-      Array.from(wcDots.children).forEach((d, i) =>
-        d.classList.toggle('is-active', i === index));
-    }
-
-    function layout() {
-      pages = Math.ceil(cardCount / perView());
-      if (index > pages - 1) index = pages - 1;
-      wcDots.innerHTML = '';
-      for (let i = 0; i < pages; i++) {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'work-dot' + (i === index ? ' is-active' : '');
-        dot.setAttribute('aria-label', 'Go to photo set ' + (i + 1));
-        dot.addEventListener('click', () => { index = i; render(); });
-        wcDots.appendChild(dot);
-      }
-      render();
-    }
-
-    wcPrev.addEventListener('click', () => { index = (index - 1 + pages) % pages; render(); });
-    wcNext.addEventListener('click', () => { index = (index + 1) % pages; render(); });
-
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(layout, 150);
-    });
-
-    layout();
-  }
-
   // ===== 4. SYNC SERVICE-CARD DROPDOWNS =====
   // Click any "Learn More" → all three open/close together.
   const serviceDetails = document.querySelectorAll('.service-info');
