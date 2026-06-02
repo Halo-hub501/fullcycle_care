@@ -22,7 +22,7 @@ function clientConfirmationHtml(name) {
   return `
   <div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:560px;margin:0 auto;color:#1a2520">
     <div style="background:#2d7a4f;padding:24px 28px;border-radius:12px 12px 0 0">
-      <h1 style="margin:0;color:#fff;font-size:1.5rem">Full Cycle Care</h1>
+      <h1 style="margin:0;color:#fff;font-size:1.5rem">Full Cycle Property Care</h1>
     </div>
     <div style="border:1px solid #e3ebe5;border-top:none;border-radius:0 0 12px 12px;padding:28px">
       <p style="font-size:1.05rem;margin:0 0 14px">Hi ${escapeHtml(firstName)},</p>
@@ -107,10 +107,10 @@ module.exports = async (req, res) => {
 
     // 2) Instant branded confirmation to the client.
     await transporter.sendMail({
-      from: `"Full Cycle Care" <${owner}>`,
+      from: `"Full Cycle Property Care" <${owner}>`,
       to: email,
       replyTo: owner,
-      subject: 'We got your request — Full Cycle Care',
+      subject: 'We got your request — Full Cycle Property Care',
       html: clientConfirmationHtml(name)
     });
 
