@@ -214,15 +214,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Build a clean payload from scratch — only include filled, non-redundant fields,
     // with human-readable labels for the email. We skip blank fields entirely.
-    // Note: do NOT append the botcheck honeypot — its presence signals "bot" to Web3Forms.
+    // Note: do NOT append the _honey honeypot — leaving it empty/absent tells FormSubmit "not a bot".
     const formData = new FormData();
-    ['access_key', 'subject', 'from_name'].forEach(n => {
-      const el = form.querySelector('[name=' + n + ']');
+    ['_subject', '_template', '_captcha', '_autoresponse'].forEach(n => {
+      const el = form.querySelector('[name="' + n + '"]');
       if (el) formData.append(n, el.value);
     });
 
+    // FormSubmit reads the lowercase "email" field for the reply-to AND the client auto-reply target.
     formData.append('Customer name',     form.elements['name'].value.trim());
-    formData.append('Email',             form.elements['email'].value.trim());
+    formData.append('email',             form.elements['email'].value.trim());
     formData.append('Phone',             form.elements['phone'].value.trim());
     formData.append('Property address',  form.elements['address'].value.trim());
 
