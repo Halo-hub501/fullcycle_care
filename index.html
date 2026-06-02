@@ -24,7 +24,7 @@
   <meta name="twitter:description" content="Locally owned property care in the Greater Toronto Area. Free on-site quotes." />
   <meta name="twitter:image" content="https://fullcyclecare.ca/images/work-1.jpg" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20260601" />
 </head>
 <body>
 
@@ -131,34 +131,41 @@
     <div class="container">
       <h2>Our work</h2>
       <p class="section-sub">Fresh cuts and clean edges. The standard we hold ourselves to — and what you can expect for your property.</p>
-      <div class="work-grid">
-        <figure class="work-card">
-          <div class="work-img work-img-1" role="img" aria-label="Freshly mowed front lawn with clean mowing stripes"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-2" role="img" aria-label="Walkway with freshly cut grass on both sides"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-3" role="img" aria-label="Manicured front yard at a GTA townhouse"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-5" role="img" aria-label="Backyard lawn with crisp mowing stripes along the fence line"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-6" role="img" aria-label="Large fenced backyard cut clean and even from edge to edge"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-7" role="img" aria-label="Backyard freshly mowed with clippings bagged and yard left tidy"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-8" role="img" aria-label="Front walkway lined with neatly trimmed lawn and shaped hedges"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-9" role="img" aria-label="Side lawn along the sidewalk cut clean down the property line"></div>
-        </figure>
-        <figure class="work-card">
-          <div class="work-img work-img-10" role="img" aria-label="Front yard freshly mowed with clippings bagged, beside a red-brick home and blue spruce"></div>
-        </figure>
+      <div class="work-carousel">
+        <div class="work-viewport">
+          <div class="work-track" id="work-track">
+            <figure class="work-card">
+              <div class="work-img work-img-1" role="img" aria-label="Freshly mowed front lawn with clean mowing stripes"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-2" role="img" aria-label="Walkway with freshly cut grass on both sides"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-3" role="img" aria-label="Manicured front yard at a GTA townhouse"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-5" role="img" aria-label="Backyard lawn with crisp mowing stripes along the fence line"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-6" role="img" aria-label="Large fenced backyard cut clean and even from edge to edge"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-7" role="img" aria-label="Backyard freshly mowed with clippings bagged and yard left tidy"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-8" role="img" aria-label="Front walkway lined with neatly trimmed lawn and shaped hedges"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-9" role="img" aria-label="Side lawn along the sidewalk cut clean down the property line"></div>
+            </figure>
+            <figure class="work-card">
+              <div class="work-img work-img-10" role="img" aria-label="Front yard freshly mowed with clippings bagged, beside a red-brick home and blue spruce"></div>
+            </figure>
+          </div>
+        </div>
+        <button class="work-nav work-prev" id="work-prev" type="button" aria-label="Previous photos">&#8249;</button>
+        <button class="work-nav work-next" id="work-next" type="button" aria-label="Next photos">&#8250;</button>
+        <div class="work-dots" id="work-dots" role="tablist" aria-label="Choose photo set"></div>
       </div>
     </div>
   </section>
@@ -410,6 +417,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20260601"></script>
 </body>
 </html>
