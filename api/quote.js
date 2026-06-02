@@ -26,10 +26,10 @@ function clientConfirmationHtml(name) {
     </div>
     <div style="border:1px solid #e3ebe5;border-top:none;border-radius:0 0 12px 12px;padding:28px">
       <p style="font-size:1.05rem;margin:0 0 14px">Dear ${escapeHtml(firstName)},</p>
-      <p style="margin:0 0 14px">Thank you for choosing <strong>Full Cycle Property Care</strong>. We are pleased to tell you that your appointment has been confirmed.</p>
-      <p style="margin:0 0 14px">Our specialist team will be on site <strong>within two hours</strong> to take care of your property. They will review your needs and care for your grounds with the reliable, professional service you deserve.</p>
-      <p style="margin:0 0 14px">We truly appreciate your trust in us, and we look forward to keeping your property looking its best all season long.</p>
-      <p style="margin:0 0 20px">If you have any questions in the meantime, simply reply to this email or call us at <a href="tel:4373182562" style="color:#2d7a4f">437-318-2562</a>.</p>
+      <p style="margin:0 0 14px">Thank you for choosing <strong>Full Cycle Property Care</strong> &mdash; we're so glad you reached out!</p>
+      <p style="margin:0 0 14px">We're pleased to confirm that we've received your request. A member of our specialist team will personally reach out <strong>within two hours</strong> to arrange your visit and go over exactly what you need.</p>
+      <p style="margin:0 0 14px">From there, we'll take care of your property with the reliable, professional service you deserve &mdash; and keep it looking its best all season long.</p>
+      <p style="margin:0 0 20px">If you have any questions in the meantime, simply reply to this email or call us anytime at <a href="tel:4373182562" style="color:#2d7a4f">437-318-2562</a>. We're always happy to help.</p>
       <p style="margin:0;color:#4a5853">Warm regards,<br><strong>The Full Cycle Property Care Team</strong><br>
         <a href="https://fullcyclecare.ca" style="color:#2d7a4f">fullcyclecare.ca</a> &middot;
         <a href="mailto:info@fullcyclecare.ca" style="color:#2d7a4f">info@fullcyclecare.ca</a>
