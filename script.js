@@ -273,6 +273,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
+        // Google Ads — fire "Request quote" conversion on a successful submission
+        if (typeof gtag === 'function') {
+          gtag('event', 'conversion', {
+            'send_to': 'AW-18242233989/vjRrCL_s3b8cEIXNyfpD',
+            'value': 1.0,
+            'currency': 'CAD'
+          });
+        }
         const confirmation = document.createElement('div');
         confirmation.className = 'form-confirmation';
         confirmation.innerHTML = `
