@@ -17,6 +17,26 @@ function escapeHtml(value) {
   ));
 }
 
+// Second line of defense (the honeypot is the first): catch "smart" bots that
+// only fill the visible fields, but with obvious junk. These are silently dropped
+// just like a honeypot hit, so the bot never learns it was rejected.
+function looksLikeSpam(body) {
+  // A real street address / name / note never contains a web link. Link-spam bots
+  // dump URLs into whatever field they find (this is how the last spam got through).
+  const urlRe = /(https?:\/\/|www\.|\.(?:com|net|org|ru|xyz|top|info|biz)\b)/i;
+  for (const field of [body.name, body.address, body.message, body.notes]) {
+    if (field && urlRe.test(String(field))) return true;
+  }
+  // Phone, if given, must be a plausible North American number: 10 digits, or 11
+  // starting with country code 1. "83458238293" (11 digits, starts with 8) is junk.
+  if (body.phone) {
+    const digits = String(body.phone).replace(/\D/g, '');
+    const validPhone = digits.length === 10 || (digits.length === 11 && digits[0] === '1');
+    if (!validPhone) return true;
+  }
+  return false;
+}
+
 function clientConfirmationHtml(name) {
   const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
   return `
@@ -46,6 +66,13 @@ module.exports = async (req, res) => {
 
   // Honeypot: real users leave this empty; bots fill it. Silently accept and drop.
   if (body._honey) {
+    res.status(200).json({ success: true });
+    return;
+  }
+
+  // Content filter: catch smarter bots that fill visible fields with junk
+  // (URLs in the address, impossible phone numbers). Drop silently, same as above.
+  if (looksLikeSpam(body)) {
     res.status(200).json({ success: true });
     return;
   }
