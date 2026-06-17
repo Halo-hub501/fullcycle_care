@@ -347,8 +347,11 @@
         </div>
         <div class="form-row">
           <label>Phone<input type="tel" name="phone" required /></label>
-          <label>Property address<input type="text" name="address" required /></label>
+          <label>Street address <em>(house number + street)</em><input type="text" name="address" placeholder="e.g. 123 Main St" required /></label>
         </div>
+        <label>City / area
+          <input type="text" name="city" placeholder="e.g. Mississauga, Brampton, Caledon…" required />
+        </label>
         <label>What do you need help with?
           <select name="service" id="form-service" required>
             <option value="">Select a service…</option>
@@ -424,6 +427,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=20260615a"></script>
+  <script src="script.js?v=20260616a"></script>
 </body>
 </html>

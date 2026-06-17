@@ -194,6 +194,25 @@ document.addEventListener('DOMContentLoaded', () => {
         field.style.borderColor = '';
       }
     });
+
+    // Street address must include a house number (at least one digit), e.g. "123 Main St".
+    const addressField = form.elements['address'];
+    const addrLabel = addressField.closest('label');
+    let addrErr = addrLabel ? addrLabel.querySelector('.field-error') : null;
+    if (addressField.value.trim() && !/\d/.test(addressField.value)) {
+      addressField.style.borderColor = '#d14';
+      if (addrLabel && !addrErr) {
+        addrErr = document.createElement('small');
+        addrErr.className = 'field-error';
+        addrErr.style.cssText = 'color:#d14;display:block;margin-top:4px';
+        addrLabel.appendChild(addrErr);
+      }
+      if (addrErr) addrErr.textContent = 'Please include your house number, e.g. 123 Main St.';
+      valid = false;
+    } else if (addrErr) {
+      addrErr.remove();
+    }
+
     if (!valid) return;
 
     const originalLabel = submitBtn.textContent;
@@ -219,7 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
       name:    form.elements['name'].value.trim(),
       email:   form.elements['email'].value.trim(),
       phone:   form.elements['phone'].value.trim(),
-      address: form.elements['address'].value.trim()
+      address: form.elements['address'].value.trim(),
+      city:    form.elements['city'].value.trim()
     };
 
     const service = formServiceEl.value;

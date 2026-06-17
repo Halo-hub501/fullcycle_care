@@ -103,6 +103,7 @@ module.exports = async (req, res) => {
     ['Email', email],
     ['Phone', body.phone],
     ['Property address', body.address],
+    ['City / area', body.city],
     ['Service requested', body.service],
     ['Yard size', body.yard],
     ['Driveway size', body.driveway],
